@@ -1,28 +1,31 @@
+// src/App.js
+
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { getAllStarships } from './services/sw-api';
 
 const App = () => {
-  const [data, setData] = useState(null);
+  const [starships, setStarships] = useState([]);
 
   useEffect(() => {
-    fetch('https://swapi.dev/api/people/1/')
-      .then((response) => response.json())
-      .then((data) => setData(data));
+    // Fetch all starships when the component mounts
+    getAllStarships().then((starships) => setStarships(starships));
   }, []);
 
   return (
     <div>
-      <h1>Star Wars Character Data</h1>
-      {data ? (
-        <div>
-          <p>Name: {data.name}</p>
-          <p>Height: {data.height}</p>
-          <p>Mass: {data.mass}</p>
-          <p>Birth Year: {data.birth_year}</p>
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
+      <h1>Star Wars Starships</h1>
+      <div className="starship-container">
+        {starships.length > 0 ? (
+          starships.map((starship, index) => (
+            <div key={index} className="starship-card">
+              <p>{starship.name}</p>
+            </div>
+          ))
+        ) : (
+          <p>Loading starships...</p>
+        )}
+      </div>
     </div>
   );
 };
